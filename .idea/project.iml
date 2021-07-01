@@ -113,6 +113,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/deprecation-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/league/mime-type-detection" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dnoegel/php-xdg-base-dir" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/coffeecode/optimizer" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

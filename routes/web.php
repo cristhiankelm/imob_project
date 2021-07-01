@@ -29,14 +29,30 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     Route::get('/quero-comprar/{slug}', 'WebController@buyProperty')->name('buyProperty');
 
     /** Página de Filtro */
-    Route::get('/filtro', 'WebController@filter')->name('filter');
+    Route::match(['post', 'get'],'/filtro', 'WebController@filter')->name('filter');
+
+    /** Página de Experiencias */
+    Route::get('/experiencias', 'WebController@experience')->name('experience');
+
+    /** Página de Experiencias - Específica de uma categoría */
+    Route::get('/experiencias/{slug}', 'WebController@experienceCategory')->name('experienceCategory');
 
     /** Página Inicial */
     Route::get('/contato', 'WebController@contact')->name('contact');
 });
 
 Route::group(['prefix' => 'component', 'namespace' => 'Web', 'as' => 'component.'], function () {
+
     Route::post('main-filter/search', 'FilterController@search')->name('main-filter.search');
+    Route::post('main-filter/category', 'FilterController@category')->name('main-filter.category');
+    Route::post('main-filter/type', 'FilterController@type')->name('main-filter.type');
+    Route::post('main-filter/neighborhood', 'FilterController@neighborhood')->name('main-filter.neighborhood');
+    Route::post('main-filter/bedrooms', 'FilterController@bedrooms')->name('main-filter.bedrooms');
+    Route::post('main-filter/suites', 'FilterController@suites')->name('main-filter.suites');
+    Route::post('main-filter/bathrooms', 'FilterController@bathrooms')->name('main-filter.bathrooms');
+    Route::post('main-filter/garage', 'FilterController@garage')->name('main-filter.garage');
+    Route::post('main-filter/price-base', 'FilterController@priceBase')->name('main-filter.priceBase');
+    Route::post('main-filter/price-limit', 'FilterController@priceLimit')->name('main-filter.priceLimit');
 });
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'as' => 'admin.'], function () {
