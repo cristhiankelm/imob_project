@@ -32,8 +32,8 @@ class FilterController extends Controller
             $properties = $this->createQuery('category');
         }
 
-        if ($properties->count()) {
-            foreach ($properties as $categoryProperty) {
+        if($properties->count()){
+            foreach($properties as $categoryProperty){
                 $category[] = $categoryProperty->category;
             }
 
@@ -47,7 +47,7 @@ class FilterController extends Controller
     public function category(Request $request)
     {
         session()->remove('type');
-        session()->put('category', $request->search);
+        session()->remove('neighborhood');
         session()->remove('bedrooms');
         session()->remove('suites');
         session()->remove('bathrooms');
@@ -55,11 +55,11 @@ class FilterController extends Controller
         session()->remove('price_base');
         session()->remove('price_limit');
 
-        session()->remove('neighborhood');
+        session()->put('category', $request->search);
         $typeProperties = $this->createQuery('type');
 
-        if ($typeProperties->count()) {
-            foreach ($typeProperties as $property) {
+        if($typeProperties->count()){
+            foreach($typeProperties as $property){
                 $type[] = $property->type;
             }
 
@@ -83,8 +83,8 @@ class FilterController extends Controller
         session()->put('type', $request->search);
         $neighborhoodProperties = $this->createQuery('neighborhood');
 
-        if ($neighborhoodProperties->count()) {
-            foreach ($neighborhoodProperties as $property) {
+        if($neighborhoodProperties->count()){
+            foreach($neighborhoodProperties as $property){
                 $neighborhood[] = $property->neighborhood;
             }
 
@@ -107,9 +107,9 @@ class FilterController extends Controller
         session()->put('neighborhood', $request->search);
         $bedroomsProperties = $this->createQuery('bedrooms');
 
-        if ($bedroomsProperties->count()) {
-            foreach ($bedroomsProperties as $property) {
-                if ($property->bedrooms === 0 || $property->bedrooms === 1) {
+        if($bedroomsProperties->count()){
+            foreach($bedroomsProperties as $property){
+                if($property->bedrooms === 0 || $property->bedrooms === 1) {
                     $bedrooms[] = $property->bedrooms . ' quarto';
                 } else {
                     $bedrooms[] = $property->bedrooms . ' quartos';
@@ -137,12 +137,12 @@ class FilterController extends Controller
         session()->put('bedrooms', $request->search);
         $suitesProperties = $this->createQuery('suites');
 
-        if ($suitesProperties->count()) {
-            foreach ($suitesProperties as $property) {
-                if ($property->suites === 0 || $property->suites === 1) {
-                    $suites[] = $property->suites . ' suite';
+        if($suitesProperties->count()){
+            foreach($suitesProperties as $property){
+                if($property->suites === 0 || $property->suites === 1){
+                    $suites[] = $property->suites . ' suíte';
                 } else {
-                    $suites[] = $property->suites . ' suites';
+                    $suites[] = $property->suites . ' suítes';
                 }
             }
 
@@ -166,9 +166,9 @@ class FilterController extends Controller
         session()->put('suites', $request->search);
         $bathroomsProperties = $this->createQuery('bathrooms');
 
-        if ($bathroomsProperties->count()) {
-            foreach ($bathroomsProperties as $property) {
-                if ($property->bathrooms === 0 || $property->bathrooms === 1) {
+        if($bathroomsProperties->count()){
+            foreach($bathroomsProperties as $property){
+                if($property->bathrooms === 0 || $property->bathrooms === 1){
                     $bathrooms[] = $property->bathrooms . ' banheiro';
                 } else {
                     $bathrooms[] = $property->bathrooms . ' banheiros';
@@ -192,13 +192,14 @@ class FilterController extends Controller
         session()->remove('price_limit');
 
         session()->put('bathrooms', $request->search);
+
         $garageProperties = $this->createQuery('garage,garage_covered');
 
-        if ($garageProperties->count()) {
-            foreach ($garageProperties as $property) {
+        if($garageProperties->count()){
+            foreach($garageProperties as $property){
                 $property->garage = $property->garage + $property->garage_covered;
 
-                if ($property->garage === 0 || $property->garage === 1) {
+                if($property->garage === 0 || $property->garage === 1){
                     $garage[] = $property->garage . ' garagem';
                 } else {
                     $garage[] = $property->garage . ' garagens';
@@ -222,14 +223,14 @@ class FilterController extends Controller
 
         session()->put('garage', $request->search);
 
-        if (session('sale') === true) {
+        if(session('sale') === true) {
             $priceBaseProperties = $this->createQuery('sale_price as price');
         } else {
             $priceBaseProperties = $this->createQuery('rent_price as price');
         }
 
-        if ($priceBaseProperties->count()) {
-            foreach ($priceBaseProperties as $property) {
+        if($priceBaseProperties->count()){
+            foreach($priceBaseProperties as $property){
                 $price[] = 'À partir de R$ ' . number_format($property->price, 2, ',', '.');
             }
 
@@ -247,14 +248,14 @@ class FilterController extends Controller
 
         session()->put('price_base', $request->search);
 
-        if (session('sale') === true) {
+        if(session('sale') === true) {
             $priceLimitProperties = $this->createQuery('sale_price as price');
         } else {
             $priceLimitProperties = $this->createQuery('rent_price as price');
         }
 
-        if ($priceLimitProperties->count()) {
-            foreach ($priceLimitProperties as $property) {
+        if($priceLimitProperties->count()){
+            foreach($priceLimitProperties as $property){
                 $price[] = 'Até R$ ' . number_format($property->price, 2, ',', '.');
             }
 
@@ -296,7 +297,7 @@ class FilterController extends Controller
         session()->remove('price_limit');
     }
 
-    private function createQuery($field)
+    public function createQuery($field)
     {
         $sale = session('sale');
         $rent = session('rent');
@@ -311,72 +312,72 @@ class FilterController extends Controller
         $priceLimit = session('price_limit');
 
         return DB::table('properties')
-            ->when($sale, function ($query, $sale) {
+            ->when($sale, function($query, $sale){
                 return $query->where('sale', $sale);
             })
-            ->when($rent, function ($query, $rent) {
+            ->when($rent, function($query, $rent){
                 return $query->where('rent', $rent);
             })
-            ->when($category, function ($query, $category) {
+            ->when($category, function($query, $category){
                 return $query->where('category', $category);
             })
-            ->when($type, function ($query, $type) {
+            ->when($type, function($query, $type){
                 return $query->whereIn('type', $type);
             })
-            ->when($neighborhood, function ($query, $neighborhood) {
+            ->when($neighborhood, function($query, $neighborhood){
                 return $query->whereIn('neighborhood', $neighborhood);
             })
-            ->when($bedrooms, function ($query, $bedrooms) {
+            ->when($bedrooms, function($query, $bedrooms){
 
-                if ($bedrooms == 'Indiferente') {
+                if($bedrooms == 'Indiferente'){
                     return $query;
                 }
-                $bedrooms = (int)$bedrooms;
+                $bedrooms = (int) $bedrooms;
                 return $query->where('bedrooms', $bedrooms);
             })
-            ->when($suites, function ($query, $suites) {
+            ->when($suites, function($query, $suites){
 
-                if ($suites == 'Indiferente') {
+                if($suites == 'Indiferente'){
                     return $query;
                 }
-                $suites = (int)$suites;
+                $suites = (int) $suites;
                 return $query->where('suites', $suites);
             })
-            ->when($bathrooms, function ($query, $bathrooms) {
+            ->when($bathrooms, function($query, $bathrooms){
 
-                if ($bathrooms == 'Indiferente') {
+                if($bathrooms == 'Indiferente'){
                     return $query;
                 }
-                $bathrooms = (int)$bathrooms;
+                $bathrooms = (int) $bathrooms;
                 return $query->where('bathrooms', $bathrooms);
             })
-            ->when($garage, function ($query, $garage) {
+            ->when($garage, function($query, $garage){
 
-                if ($garage == 'Indiferente') {
+                if($garage == 'Indiferente'){
                     return $query;
                 }
-                $garage = (int)$garage;
+                $garage = (int) $garage;
                 return $query->whereRaw('garage + garage_covered = ? OR garage = ? OR garage_covered = ?', [$garage, $garage, $garage]);
             })
-            ->when($priceBase, function ($query, $priceBase) {
+            ->when($priceBase, function($query, $priceBase){
 
-                if ($priceBase == 'Indiferente') {
+                if($priceBase == 'Indiferente'){
                     return $query;
                 }
-                $priceBase = (float)str_replace(',', '.', str_replace('.', '', explode('R$ ', $priceBase, 2)[1]));
-                if (session('sale') == true) {
+                $priceBase = (float) str_replace(',', '.', str_replace('.', '', explode('R$ ', $priceBase, 2)[1]));
+                if(session('sale') == true){
                     return $query->where('sale_price', '>=', $priceBase);
                 } else {
                     return $query->where('rent_price', '>=', $priceBase);
                 }
             })
-            ->when($priceLimit, function ($query, $priceLimit) {
+            ->when($priceLimit, function($query, $priceLimit){
 
-                if ($priceLimit == 'Indiferente') {
+                if($priceLimit == 'Indiferente'){
                     return $query;
                 }
-                $priceLimit = (float)str_replace(',', '.', str_replace('.', '', explode('R$ ', $priceLimit, 2)[1]));
-                if (session('sale') == true) {
+                $priceLimit = (float) str_replace(',', '.', str_replace('.', '', explode('R$ ', $priceLimit, 2)[1]));
+                if(session('sale') == true){
                     return $query->where('sale_price', '<=', $priceLimit);
                 } else {
                     return $query->where('rent_price', '<=', $priceLimit);

@@ -16,6 +16,9 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
     /** Página Inicial */
     Route::get('/', 'WebController@home')->name('home');
 
+    /** Página Destaque */
+    Route::get('/destaque', 'WebController@spotlight')->name('spotlight');
+
     /** Página de Locação */
     Route::get('/quero-alugar', 'WebController@rent')->name('rent');
 
@@ -39,6 +42,8 @@ Route::group(['namespace' => 'Web', 'as' => 'web.'], function () {
 
     /** Página Inicial */
     Route::get('/contato', 'WebController@contact')->name('contact');
+    Route::post('/contato/sendEmail', 'WebController@sendEmail')->name('sendEmail');
+    Route::get('/contato/sucesso', 'WebController@sendEmailSuccess')->name('sendEmailSuccess');
 });
 
 Route::group(['prefix' => 'component', 'namespace' => 'Web', 'as' => 'component.'], function () {

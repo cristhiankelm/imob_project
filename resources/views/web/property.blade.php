@@ -50,23 +50,29 @@
                         </div>
 
                         <div class="main_property_price pt-4 text-muted">
-                            <p class="main_property_price_small">IPTU: R$ {{ $property->tribute }} {{ ($property->condominium != '0,00' ? '| Condomínio: R$' . $property->condominium : '') }}</p>
+                            <p class="main_property_price_small">IPTU:
+                                R$ {{ $property->tribute }} {{ ($property->condominium != '0,00' ? '| Condomínio: R$' . $property->condominium : '') }}</p>
 
                             @if(!empty($type) && $type == 'sale')
                                 <p class="main_property_price_big">Valor do Imóvel: R$ {{ $property->sale_price }}</p>
                             @elseif(!empty($type) && $type == 'rent')
-                                <p class="main_property_price_big">Valor do Aluguel: R$ {{ $property->rent_price }}/mês</p>
+                                <p class="main_property_price_big">Valor do Aluguel: R$ {{ $property->rent_price }}
+                                    /mês</p>
                             @else
 
                                 @if($property->sale == true && !empty($property->sale_price) && $property->rent == true && !empty($property->rent_price))
-                                    <p class="main_property_price_big">Valor do Imóvel: R$ {{ $property->sale_price }} <br>
+                                    <p class="main_property_price_big">Valor do Imóvel: R$ {{ $property->sale_price }}
+                                        <br>
                                         ou Valor do Aluguel: R$ {{ $property->rent_price }}/mês</p>
                                 @elseif($property->sale == true && !empty($property->sale_price))
-                                    <p class="main_property_price_big">Valor do Imóvel: R$ {{ $property->sale_price }}</p>
+                                    <p class="main_property_price_big">Valor do Imóvel:
+                                        R$ {{ $property->sale_price }}</p>
                                 @elseif($property->rent == true && !empty($property->rent_price))
-                                    <p class="main_property_price_big">Valor do Aluguel: R$ {{ $property->rent_price }}/mês</p>
+                                    <p class="main_property_price_big">Valor do Aluguel: R$ {{ $property->rent_price }}
+                                        /mês</p>
                                 @else
-                                    <p class="main_properties_price text-front">Entre em contato com a nossa equipe comercial!</p>
+                                    <p class="main_properties_price text-front">Entre em contato com a nossa equipe
+                                        comercial!</p>
                                 @endif
                             @endif
                         </div>
@@ -195,29 +201,30 @@
                     </div>
 
                     <div class="col-12 col-lg-4">
-                        <button class="btn btn-outline-success btn-lg btn-block icon-whatsapp mb-3">Converse com o
-                            Corretor!
-                        </button>
+                        <a href="https://api.whatsapp.com/send?phone=DDI+DDD+TELEFONE&text=Olá, preciso de ajuda com o login."
+                           class="btn btn-outline-success btn-lg btn-block icon-whatsapp mb-3">Converse com o
+                            Corretor!</a>
 
                         <div class="main_property_contact">
                             <h2 class="bg-front text-white">Entre em contato</h2>
 
-                            <form action="">
+                            <form action="{{ route('web.sendEmail') }}" method="post">
+                                @csrf
                                 <div class="form-group">
                                     <label for="name">Seu nome:</label>
-                                    <input type="text" id="name" class="form-control"
+                                    <input type="text" class="form-control" name="name"
                                            placeholder="Informe seu nome completo">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="telephone">Seu telefone:</label>
-                                    <input type="tel" id="telephone" class="form-control"
+                                    <input type="tel" name="cell" class="form-control"
                                            placeholder="Informe seu telefone com DDD">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="email">Seu e-mail:</label>
-                                    <input type="email" id="email" class="form-control"
+                                    <input type="email" name="email" class="form-control"
                                            placeholder="Informe seu melhor e-mail">
                                 </div>
 
@@ -233,11 +240,19 @@
                             </form>
                         </div>
 
-                        <div class="main_property_share py-3 text-right">
-                            <span class="text-front mr-2">Compartilhe:</span>
-                            <button class="btn btn-front icon-facebook icon-notext"></button>
-                            <button class="btn btn-front icon-twitter icon-notext"></button>
-                            <button class="btn btn-front icon-instagram icon-notext"></button>
+                        <div class="main_property_share py-3 text-right d-flex justify-content-center">
+                            <div class="fb-share-button mr-2" data-href="{{ url()->current() }}"
+                                 data-layout="button_count" data-size="large"><a target="_blank"
+                                                                                 href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}&amp;src=sdkpreparse"
+                                                                                 class="fb-xfbml-parse-ignore">Compartilhar</a>
+                            </div>
+                            <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button"
+                               data-size="large" data-text="{{ $property->title }}" data-url="{{ url()->current() }}"
+                               data-hashtags="laradev" data-related="cristhiankelm" data-lang="pt"
+                               data-show-count="false">Tweet</a>
+                            <a style="padding: 0 10px; margin: 0; font-size: 0.875em; padding-top: 2px;"
+                               href="https://instagram.com/cristhiankelm/" target="_blank"
+                               class="btn btn-front icon-instagram ml-2">Instagram</a>
                         </div>
                     </div>
                 </div>
@@ -287,4 +302,9 @@
         }
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=markMap"></script>
+
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous"
+            src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v3.3&appId=1981931985380360&autoLogAppEvents=1"></script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 @endsection
